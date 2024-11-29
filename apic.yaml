@@ -1,0 +1,5 @@
+# Fill apic_pwd to skip interactive input
+---
+apic_ip: "apic.skytech.local"
+apic_user: "palmierimarc"
+apic_pwd: ""

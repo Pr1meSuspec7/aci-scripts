@@ -1,0 +1,6 @@
+_old/
+venv*
+*.xlsx
+*.log
+test.py
+test2.py

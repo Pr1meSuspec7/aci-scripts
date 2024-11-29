@@ -1,0 +1,5 @@
+# Fill apic_pwd to skip interactive input
+---
+apic_ip: "10.164.80.200"
+apic_user: "admin"
+apic_pwd: ""
