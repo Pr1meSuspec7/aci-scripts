@@ -212,12 +212,16 @@ if args.description:
         outputTable = listDict_to_table(data_extract)
         print(outputTable)
         data_extract_log = format_logs(data_extract)
-        with open('./output/output__' + timestamp + '.log', 'a') as output:
+        with open('output__' + timestamp + '.log', 'a') as output:
             output.write(json.dumps(data_extract_log, indent=4))
 else:
+    # TODO: PROBLEMA: il primo EPG viene loopato anche sulle altre interfacce
+    # si tratta dello stesso errore che avevo prima
     interfaces = split_list(args.interface, 3)
+    query_response_infraPortSummaryList = []
     for interface in interfaces:
         query_response_infraPortSummary = aci_query_infraPortSummary_by_interface(BASE_URL, interface[0], interface[1], interface[2], cookie)
+        query_response_infraPortSummaryList.extend(query_response_infraPortSummary)
 
         # Go to next iteration if no results
         if len(query_response_infraPortSummary) == 0:
@@ -227,21 +231,21 @@ else:
             pass
 
         # This for loop makes other query to ethpmPhysIf and vRsPathAtt based on interfaces in query_response_infraPortSummary
-        query_response_operStQual = []
-        query_response_vRsPathAtt = []
-        for i in query_response_infraPortSummary:
-            query_response_operStQual.append(aci_query_operStQual(BASE_URL, i['infraPortSummary']['attributes']['pod'],
-                                                                i['infraPortSummary']['attributes']['node'], re.findall(r'eth\S+(?=])',
-                                                                    (i['infraPortSummary']['attributes']['portDn']))[0], cookie))
-            if i['infraPortSummary']['attributes']['mode'] == 'pc' or i['infraPortSummary']['attributes']['mode'] == 'vpc':
-                query_response_vRsPathAtt.append(aci_query_fvRsPathAtt(BASE_URL, i['infraPortSummary']['attributes']['pcPortDn'], cookie))
-            else:
-                query_response_vRsPathAtt.append(aci_query_fvRsPathAtt(BASE_URL, i['infraPortSummary']['attributes']['portDn'], cookie))
+    query_response_operStQual = []
+    query_response_vRsPathAtt = []
+    for i in query_response_infraPortSummaryList:
+        query_response_operStQual.append(aci_query_operStQual(BASE_URL, i['infraPortSummary']['attributes']['pod'],
+                                                            i['infraPortSummary']['attributes']['node'], re.findall(r'eth\S+(?=])',
+                                                                (i['infraPortSummary']['attributes']['portDn']))[0], cookie))
+        if i['infraPortSummary']['attributes']['mode'] == 'pc' or i['infraPortSummary']['attributes']['mode'] == 'vpc':
+            query_response_vRsPathAtt.append(aci_query_fvRsPathAtt(BASE_URL, i['infraPortSummary']['attributes']['pcPortDn'], cookie))
+        else:
+            query_response_vRsPathAtt.append(aci_query_fvRsPathAtt(BASE_URL, i['infraPortSummary']['attributes']['portDn'], cookie))
 
-        data_extract = extract_data(query_response_infraPortSummary, query_response_operStQual, query_response_vRsPathAtt[0])
-        #print(data_extract)
-        outputTable = listDict_to_table(data_extract)
-        print(outputTable)
-        data_extract_log = format_logs(data_extract)
-        with open('./output/output__' + timestamp + '.log', 'a') as output:
-            output.write(json.dumps(data_extract_log, indent=4))
+    data_extract = extract_data(query_response_infraPortSummaryList, query_response_operStQual, query_response_vRsPathAtt[0])
+    #print(data_extract)
+    outputTable = listDict_to_table(data_extract)
+    print(outputTable)
+    data_extract_log = format_logs(data_extract)
+    with open('./output/output__' + timestamp + '.log', 'a') as output:
+        output.write(json.dumps(data_extract_log, indent=4))
