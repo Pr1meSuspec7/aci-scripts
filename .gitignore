@@ -2,5 +2,6 @@ _old/
 venv*
 *.xlsx
 *.log
+*.old
 test.py
 test2.py

@@ -1,9 +1,21 @@
 [
     {
         "POD": "1",
-        "NODE": "101",
+        "NODE": "302",
+        "INTERFACE": "eth1/1",
+        "ADMIN STATE": "up",
+        "OPER STATUS": "down",
+        "OPER REASON": "link-not-connected",
+        "PORT MODE": "Individual",
+        "POLICY GROUP": "access_SRV_Auto_PolGrp",
+        "DESCRIPTION": "ilo-originstar01",
+        "EPGs": []
+    },
+    {
+        "POD": "1",
+        "NODE": "102",
         "INTERFACE": "eth1/3",
-        "SHUTDOWN": "up",
+        "ADMIN STATE": "up",
         "OPER STATUS": "up",
         "OPER REASON": "none",
         "PORT MODE": "Virtual Port-Channel",
@@ -32,9 +44,9 @@
     },
     {
         "POD": "1",
-        "NODE": "102",
+        "NODE": "101",
         "INTERFACE": "eth1/3",
-        "SHUTDOWN": "up",
+        "ADMIN STATE": "up",
         "OPER STATUS": "up",
         "OPER REASON": "none",
         "PORT MODE": "Virtual Port-Channel",
